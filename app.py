@@ -5,15 +5,21 @@ Semantic Product Search Web Application
 Streamlit web interface for real-time product search using trained
 semantic ranking model.
 
-Author: [Your Name]
-Course: Generative AI - Fall 2025
+Author: Salman Khan
+Institution: NUCES Islamabad
 
 Usage:
     streamlit run app.py
 """
 
 import os
+# Suppress TensorFlow/OneDNN warnings
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 import sys
+import re
+import html  # Added for safe text escaping
 import time
 import numpy as np
 import pandas as pd
@@ -28,7 +34,6 @@ sys.path.append('src')
 from model import SemanticRankingModel
 from preprocessor import MinimalPreprocessor
 from utils import (
-    cosine_similarity,
     get_top_k_similar,
     format_results,
     load_embeddings
@@ -68,7 +73,7 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
+        font-size: 6rem;
         font-weight: bold;
         color: #1f77b4;
         text-align: center;
@@ -81,28 +86,45 @@ st.markdown("""
         margin-bottom: 2rem;
     }
     .result-card {
-        padding: 1rem;
+        padding: 1.5rem;
         border-radius: 0.5rem;
-        border: 1px solid #ddd;
+        border: 1px solid #e0e0e0;
         margin-bottom: 1rem;
-        background-color: #f9f9f9;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .result-title {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: bold;
         color: #333;
         margin-bottom: 0.5rem;
     }
     .result-score {
-        font-size: 0.9rem;
+        background-color: #e8f4f8;
         color: #1f77b4;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.3rem;
         font-weight: bold;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 0.5rem;
     }
     .metric-box {
         padding: 1rem;
         border-radius: 0.5rem;
-        background-color: #e8f4f8;
+        background-color: #f0f2f6;
+        border: 1px solid #dce1e6;
         text-align: center;
+        margin-bottom: 1rem;
+    }
+    .metric-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1f77b4;
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        color: #666;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -131,11 +153,6 @@ def load_models():
             1. Trained the model on Kaggle
             2. Downloaded the model files
             3. Placed them in the 'models/' directory
-            
-            Required files:
-            - models/best_model.pth
-            - models/product_embeddings.npy
-            - models/product_metadata.parquet
             """)
             st.stop()
         
@@ -182,14 +199,6 @@ def load_models():
 def search_products(query: str, resources: dict, top_n: int = 10) -> dict:
     """
     Perform semantic search for products
-    
-    Args:
-        query: Search query
-        resources: Dictionary of loaded models and data
-        top_n: Number of results to return
-    
-    Returns:
-        Dictionary with results and metrics
     """
     start_time = time.time()
     
@@ -199,7 +208,6 @@ def search_products(query: str, resources: dict, top_n: int = 10) -> dict:
     embedding_model = resources['embedding_model']
     product_embeddings = resources['product_embeddings']
     df_products = resources['df_products']
-    preprocessor = resources['preprocessor']
     device = resources['device']
     
     # 1. Encode query
@@ -271,7 +279,7 @@ def search_products(query: str, resources: dict, top_n: int = 10) -> dict:
 
 def main():
     # Header
-    st.markdown('<p class="main-header">🔍 Semantic Product Search</p>', unsafe_allow_html=True)
+    st.markdown('<p class="main-header">Semantic Product Search</p>', unsafe_allow_html=True)
     st.markdown(
         '<p class="sub-header">Powered by Deep Learning & Transformer Models</p>',
         unsafe_allow_html=True
@@ -280,26 +288,28 @@ def main():
     # Load resources
     try:
         resources = load_models()
-        st.success("✅ Models loaded successfully!")
     except Exception as e:
         st.error(f"❌ Error loading models: {str(e)}")
         st.stop()
     
     # Sidebar
     with st.sidebar:
-        st.header("⚙️ Settings")
+        # About Section (moved to top)
+        st.subheader("📖 About")
+        st.markdown("""
+        This application uses a **semantic search** approach to find
+        relevant products based on natural language queries.
         
-        top_n = st.slider(
-            "Number of Results",
-            min_value=5,
-            max_value=20,
-            value=10,
-            step=1
-        )
-        
+        **Features:**
+        - Deep learning-based ranking
+        - Natural language understanding
+        - Real-time search
+        - Relevance scoring
+        """)
         st.divider()
-        
-        st.subheader("📊 Model Info")
+
+        # Model Info (second)
+        st.subheader("Model Info")
         st.info(f"""
         **Ranking Model:** {config.MODEL_NAME}
         
@@ -309,24 +319,21 @@ def main():
         
         **Products Indexed:** {len(resources['df_products']):,}
         """)
-        
         st.divider()
-        
-        st.subheader("📖 About")
-        st.markdown("""
-        This application uses a **semantic search** approach to find
-        relevant products based on natural language queries.
-        
-        **Features:**
-        - 🧠 Deep learning-based ranking
-        - 🔤 Natural language understanding
-        - ⚡ Real-time search
-        - 📊 Relevance scoring
-        """)
-        
+
+        # Settings (third)
+        st.header("⚙️ Settings")
+        top_n = st.slider(
+            "Number of Results",
+            min_value=5,
+            max_value=20,
+            value=10,
+            step=1
+        )
         st.divider()
-        
-        st.caption("Task 2: Semantic Product Search")
+
+        # Footer (last)
+        st.caption("Semantic Product Search")
         st.caption("Generative AI - Fall 2025")
         st.caption("NUCES Islamabad")
     
@@ -334,52 +341,53 @@ def main():
     st.subheader("🔎 Search for Products")
     
     # Search interface
-    col1, col2 = st.columns([4, 1])
-    
-    with col1:
-        query = st.text_input(
-            "",
-            placeholder="Enter your search query (e.g., 'wireless bluetooth headphones with noise cancellation')",
-            label_visibility="collapsed"
-        )
-    
-    with col2:
-        search_button = st.button("🔍 Search", type="primary", use_container_width=True)
-    
+    with st.form(key='search_form'):
+        col1, col2 = st.columns([4, 1])
+        
+        with col1:
+            query = st.text_input(
+                "Search Query",
+                placeholder="Enter your search query (e.g., 'wireless bluetooth headphones')",
+                label_visibility="collapsed"
+            )
+        
+        with col2:
+            submit_button = st.form_submit_button("🔍 Search", type="primary", use_container_width=True)
+
     # Example queries
     st.caption("💡 **Try these:** wireless headphones | gaming laptop | running shoes | kitchen appliances")
     
     # Perform search
-    if search_button and query:
+    if submit_button and query:
         with st.spinner("🔄 Searching..."):
             try:
                 # Perform search
                 search_results = search_products(query, resources, top_n=top_n)
                 
                 # Display metrics
-                col1, col2, col3 = st.columns(3)
+                c1, c2, c3 = st.columns(3)
                 
-                with col1:
+                with c1:
                     st.markdown(f"""
                     <div class="metric-box">
-                        <h3>{search_results['num_results']}</h3>
-                        <p>Results Found</p>
+                        <div class="metric-value">{search_results['num_results']}</div>
+                        <div class="metric-label">Results Found</div>
                     </div>
                     """, unsafe_allow_html=True)
                 
-                with col2:
+                with c2:
                     st.markdown(f"""
                     <div class="metric-box">
-                        <h3>{search_results['search_time']:.2f}s</h3>
-                        <p>Search Time</p>
+                        <div class="metric-value">{search_results['search_time']:.2f}s</div>
+                        <div class="metric-label">Search Time</div>
                     </div>
                     """, unsafe_allow_html=True)
                 
-                with col3:
+                with c3:
                     st.markdown(f"""
                     <div class="metric-box">
-                        <h3>{search_results['num_candidates']}</h3>
-                        <p>Candidates Ranked</p>
+                        <div class="metric-value">{search_results['num_candidates']}</div>
+                        <div class="metric-label">Candidates Ranked</div>
                     </div>
                     """, unsafe_allow_html=True)
                 
@@ -389,37 +397,46 @@ def main():
                 st.subheader("📦 Top Results")
                 
                 for result in search_results['results']:
-                    with st.container():
-                        st.markdown(f"""
-                        <div class="result-card">
-                            <div class="result-title">
-                                {result['rank']}. {result['title']}
-                            </div>
-                            <p style="color: #666; margin-bottom: 0.5rem;">
-                                {result['description'][:200]}{"..." if len(result['description']) > 200 else ""}
-                            </p>
-                            <div class="result-score">
-                                ⭐ Relevance Score: {result['relevance_score']:.3f}
-                            </div>
-                            <p style="color: #999; font-size: 0.85rem; margin-top: 0.5rem;">
-                                Product ID: {result['product_id']}
-                            </p>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    # ==========================================================
+                    # FIX: ROBUST TEXT CLEANING
+                    # ==========================================================
+                    # 1. Strip HTML tags (remove <b>, <br>, etc)
+                    clean_title = re.sub(r'<[^>]+>', '', result['title'])
+                    clean_desc = re.sub(r'<[^>]+>', ' ', result['description'])
+                    
+                    # 2. Escape any remaining special chars (<, >, &) to prevent crash
+                    clean_title = html.escape(clean_title)
+                    clean_desc = html.escape(clean_desc)
+                    
+                    # 3. Clean up extra whitespace
+                    clean_desc = re.sub(r'\s+', ' ', clean_desc).strip()
+                    
+                    # 4. Truncate SAFELY
+                    title_display = clean_title
+                    desc_display = clean_desc[:250] + ("..." if len(clean_desc) > 250 else "")
+                    
+                    # Construct Card HTML
+                    card_html = f"""
+                    <div class="result-card">
+                        <div class="result-title">{result['rank']}. {title_display}</div>
+                        <p style="color: #555; font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.5;">{desc_display}</p>
+                        <div class="result-score">⭐ Relevance Score: {result['relevance_score']:.3f}</div>
+                        <p style="color: #999; font-size: 0.8rem; margin-top: 0.5rem; text-align: right;">Product ID: {result['product_id']}</p>
+                    </div>
+                    """
+                    st.markdown(card_html, unsafe_allow_html=True)
                 
             except Exception as e:
                 st.error(f"❌ Error during search: {str(e)}")
-                st.exception(e)
     
-    elif search_button:
+    elif submit_button:
         st.warning("⚠️ Please enter a search query")
     
     # Footer
     st.divider()
     st.markdown("""
     <div style="text-align: center; color: #999; font-size: 0.9rem;">
-        <p>Built with Streamlit & PyTorch | Task 2: Semantic Product Search</p>
-        <p>Course: Generative AI (Fall 2025) | Instructor: Dr. Akhtar Jamil</p>
+        <p>Built with Streamlit & PyTorch | Semantic Product Search</p>
     </div>
     """, unsafe_allow_html=True)
 
