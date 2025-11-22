@@ -58,6 +58,7 @@ models/*.pkl
 models/*.bin
 models/*.h5
 models/*.parquet
+models/*.json
 
 # Training Outputs
 *.log

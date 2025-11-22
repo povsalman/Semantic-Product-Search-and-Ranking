@@ -39,6 +39,7 @@ psutil==5.9.5  # For memory monitoring
 # Optional but recommended
 ipykernel==6.25.2  # For Jupyter support
 ipywidgets==8.1.1
+contractions
 
 # File handling
 openpyxl==3.1.2
