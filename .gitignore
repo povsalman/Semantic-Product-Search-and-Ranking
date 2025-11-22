@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Data Files
+data/raw/*.parquet
+data/raw/*.csv
+data/processed/*.parquet
+data/processed/*.csv
+data/processed/*.pkl
+
+# Model Files
+models/*.pth
+models/*.pt
+models/*.ckpt
+models/*.npy
+models/*.pkl
+models/*.bin
+models/*.h5
+models/*.parquet
+
+# Training Outputs
+*.log
+logs/
+runs/
+checkpoints/
+wandb/
+
+# NLTK Data
+nltk_data/
+
+# Output Files
+*.png
+*.jpg
+*.jpeg
+*.pdf
+outputs/
+
+# Cache
+.cache/
+*.cache
+.pytest_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+*.tmp
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Coverage Reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Secrets
+kaggle.json
+*.key
+*.pem
