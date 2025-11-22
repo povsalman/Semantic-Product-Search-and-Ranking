@@ -124,7 +124,7 @@ pip install -r requirements.txt
 
 ```powershell
 # Run Python and download NLTK data
-python -c "import nltk; nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('punkt'); nltk.download('omw-1.4')"
+pip install nltk
 ```
 
 ### Step 1.6: Verify Setup
