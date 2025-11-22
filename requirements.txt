@@ -1,0 +1,44 @@
+# Semantic Product Search - Local Dependencies
+# Python 3.8+
+
+# Core Data Processing
+pandas==2.0.3
+numpy==1.24.3
+pyarrow==12.0.1  # For parquet file support
+
+# NLP & Text Processing
+nltk==3.8.1
+spacy==3.5.3
+contractions==0.1.73
+
+# Traditional ML & Embeddings
+scikit-learn==1.3.0
+gensim==4.3.1  # For Word2Vec
+
+# Deep Learning (CPU version for local)
+torch==2.0.1  # CPU version
+transformers==4.35.2
+sentence-transformers==2.2.2
+
+# Evaluation Metrics
+ranx==0.3.16  # For NDCG, MAP, etc.
+
+# Visualization
+matplotlib==3.7.2
+seaborn==0.12.2
+plotly==5.17.0
+
+# Web Interface
+streamlit==1.28.1
+
+# Utilities
+tqdm==4.66.1
+joblib==1.3.2
+psutil==5.9.5  # For memory monitoring
+
+# Optional but recommended
+ipykernel==6.25.2  # For Jupyter support
+ipywidgets==8.1.1
+
+# File handling
+openpyxl==3.1.2

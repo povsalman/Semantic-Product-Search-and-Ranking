@@ -1,6 +1,6 @@
-# Task 2: Semantic Product Search and Ranking System
+# Semantic Product Search and Ranking System
 
-## 📋 Project Overview
+## 📋 Overview
 
 A deep learning-based semantic product search system that understands natural language queries and returns contextually relevant products from the Amazon Shopping Queries Dataset. The system uses transformer-based embeddings and neural ranking to provide accurate search results.
 

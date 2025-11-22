@@ -1,0 +1,21 @@
+# Task 2: Semantic Product Search - Kaggle GPU Dependencies
+# For P100/T4 GPU environment with 12-hour limit
+
+# Note: Most packages pre-installed on Kaggle
+# Only install what's missing
+
+# Core packages (usually pre-installed)
+# pandas, numpy, scikit-learn are pre-installed
+
+# NLP (may need update)
+transformers==4.35.2
+sentence-transformers==2.2.2
+
+# Evaluation
+ranx==0.3.16
+
+# Utilities
+contractions==0.1.73
+
+# For tracking (optional)
+# wandb==0.16.0  # Uncomment if you want experiment tracking
