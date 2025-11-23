@@ -1,565 +1,281 @@
 ================================================================================
-TASK 2: SEMANTIC PRODUCT SEARCH AND RANKING - GPT PROMPTS LOG
+TASK 2: SEMANTIC PRODUCT SEARCH AND RANKING - PROMPTS LOG
 ================================================================================
 
-Student: [Your Name]
-Roll No: [Your Roll Number]
+Student: Salman Khan
+Roll No: 22I-1285
 Course: Generative AI - Fall 2025
 Instructor: Dr. Akhtar Jamil
 Institution: NUCES Islamabad
 
-This file contains all prompts used during the implementation of Task 2.
+This file contains all the prompts I used while working on Task 2.
 
 ================================================================================
-SECTION 1: PROJECT PLANNING AND UNDERSTANDING
+SECTION 1: GETTING STARTED & UNDERSTANDING THE TASK
 ================================================================================
 
-=== Prompt 1.1: Understanding the Assignment ===
-Date: [Date]
-Model: Claude/GPT-4
+Prompt 1:
+"I need help with my Generative AI assignment on Semantic Product Search. We have 
+to use the Amazon ESCI dataset and build a ranking system. The requirements are:
+- Load and preprocess the dataset
+- Use embeddings (both traditional and transformer based)
+- Train a ranking model 
+- Evaluate with metrics like NDCG, MAP, Precision@K etc
+- Make a web app for deployment
 
-Prompt:
-"I need to complete Task 2 of my Generative AI assignment on Semantic Product 
-Search and Ranking using the Amazon ESCI dataset. The task requires:
-1. Loading and preprocessing the dataset
-2. Implementing traditional and transformer-based embeddings
-3. Training a deep learning ranking model
-4. Evaluating using NDCG, MAP, Precision@K, Recall@K, F1@K
-5. Deploying as a web application
-
-Can you help me create a comprehensive implementation plan with step-by-step 
-approach?"
-
-Response Summary:
-[Received detailed workplan with phases for data processing, embedding 
-generation, model training, evaluation, and deployment]
+Can you help me figure out how to approach this step by step?"
 
 ---
 
-=== Prompt 1.2: Dataset Understanding ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Explain the Amazon ESCI Shopping Queries Dataset structure. What are ESCI 
-labels (E, S, C, I) and how should I convert them to relevance scores for 
-training a ranking model?"
-
-Response Summary:
-[Learned that E=Exact (1.0), S=Substitute (0.7), C=Complement (0.3), 
-I=Irrelevant (0.0). These scores represent relevance for ranking.]
+Prompt 2:
+"What exactly is the Amazon ESCI dataset? I see labels like E, S, C, I in the data. 
+What do these mean and how should i convert them into relevance scores for training?"
 
 ---
 
-=== Prompt 1.3: Model Architecture Selection ===
-Date: [Date]
-Model: Claude
+Prompt 3:
+"For product search should I use cross-encoder or bi-encoder? My laptop has only 
+8GB RAM and I can use Kaggle with P100 GPU (12 hour limit). Which architecture 
+would work better for my constraints?"
 
-Prompt:
-"For semantic product search, should I use a cross-encoder or bi-encoder 
-architecture? My constraints are: 8GB RAM laptop for local deployment, 
-Kaggle P100 GPU for training with 12-hour limit. What's the best approach?"
-
-Response Summary:
-[Recommended cross-encoder with DistilBERT for training on Kaggle (better 
-accuracy) and pre-computed embeddings with bi-encoder for fast local inference]
 
 ================================================================================
 SECTION 2: DATA LOADING AND PREPROCESSING
 ================================================================================
 
-=== Prompt 2.1: Loading Parquet Files ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"How do I load and merge the Amazon ESCI dataset parquet files 
-(shopping_queries_dataset_examples.parquet and 
-shopping_queries_dataset_products.parquet) in Python using pandas? I need to 
-combine product title and description fields."
-
-Response Summary:
-[Received code for pd.read_parquet() and pd.merge() with proper join keys 
-(product_id, product_locale)]
+Prompt 4:
+"How do i load these parquet files in python? I have 
+shopping_queries_dataset_examples.parquet and shopping_queries_dataset_products.parquet. 
+Need to merge them and combine product title + description fields."
 
 ---
 
-=== Prompt 2.2: Text Preprocessing Pipeline ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Create a comprehensive text preprocessing pipeline for product search that 
-includes: contraction expansion, lowercasing, special character removal, 
-stopword removal, and lemmatization. Use NLTK."
-
-Response Summary:
-[Implemented TextPreprocessor class with all required preprocessing steps]
+Prompt 5:
+"I need to build a text preprocessing pipeline for the product search. Should include 
+things like contraction expansion, lowercasing, removing special chars, stopwords, 
+and lemmatization. Can you help with NLTK implementation?"
 
 ---
 
-=== Prompt 2.3: Train-Val-Test Split Strategy ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"For query-product ranking, how should I split my dataset to avoid data 
-leakage? Should I split by rows or by query_id?"
-
-Response Summary:
-[Split by query_id to ensure same query doesn't appear in train and test sets. 
-Use 70-15-15 split with stratification.]
+Prompt 6:
+"For the train test split - should I randomly split all rows or split by query_id? 
+Don't want data leakage where same query appears in train and test."
 
 ================================================================================
-SECTION 3: EMBEDDINGS AND FEATURE ENGINEERING
+SECTION 3: EMBEDDINGS 
 ================================================================================
 
-=== Prompt 3.1: TF-IDF Implementation ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Implement TF-IDF vectorization for product search. How do I combine query 
-and product TF-IDF vectors to calculate relevance?"
-
-Response Summary:
-[Use sklearn.feature_extraction.text.TfidfVectorizer with cosine similarity 
-for baseline relevance scoring]
+Prompt 7:
+"How to implement TF-IDF for baseline? Need to vectorize both queries and products 
+and calculate relevance using cosine similarity."
 
 ---
 
-=== Prompt 3.2: BERT Embeddings ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"How do I generate BERT embeddings for semantic search? Should I use 
-sentence-transformers or raw transformers library? What's the difference?"
-
-Response Summary:
-[sentence-transformers is optimized for semantic search with models like 
-all-MiniLM-L6-v2. Use encode() method for efficient batch processing.]
+Prompt 8:
+"What's the difference between sentence-transformers and regular transformers library 
+for BERT embeddings? Which one is better for semantic search?"
 
 ---
 
-=== Prompt 3.3: Embedding Storage ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"What's the most efficient way to store and load product embeddings for fast 
-retrieval? Should I use numpy, pickle, or FAISS?"
-
-Response Summary:
-[Use numpy.save() for embeddings (fast loading) and pandas parquet for 
-metadata. FAISS is overkill for <100K products.]
+Prompt 9:
+"Best way to store product embeddings for fast retrieval? Should i use numpy, pickle, 
+or FAISS index? We have around 100K products."
 
 ================================================================================
-SECTION 4: MODEL ARCHITECTURE AND TRAINING
+SECTION 4: MODEL TRAINING
 ================================================================================
 
-=== Prompt 4.1: Cross-Encoder Architecture ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Design a neural ranking model architecture using DistilBERT for query-product 
-relevance prediction. Input should be [CLS] query [SEP] product [SEP] and 
-output should be relevance score in [0,1]."
-
-Response Summary:
-[Implemented SemanticRankingModel with BERT encoder + dropout + linear 
-regression head + sigmoid activation]
+Prompt 10:
+"Need to design a neural ranking model using DistilBERT. Input should be query and 
+product concatenated, output should be relevance score between 0 and 1. How to 
+structure this?"
 
 ---
 
-=== Prompt 4.2: PyTorch Dataset Class ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Create a PyTorch Dataset class for product search that tokenizes query-product 
-pairs and returns input_ids, attention_mask, and labels."
-
-Response Summary:
-[Implemented ProductSearchDataset with tokenizer, max_length handling, and 
-proper tensor conversion]
+Prompt 11:
+"Can you help create a PyTorch Dataset class that tokenizes query-product pairs? 
+Need it to return input_ids, attention_mask and labels properly."
 
 ---
 
-=== Prompt 4.3: Training Loop Implementation ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Write a complete PyTorch training loop with:
-- MSE loss function
+Prompt 12:
+"Write a training loop with these features:
+- MSE loss 
 - AdamW optimizer
-- Learning rate scheduler with warmup
-- Gradient clipping
-- Early stopping based on validation loss
-- Model checkpointing"
-
-Response Summary:
-[Implemented train_epoch() and evaluate() functions with all required features]
+- learning rate scheduler with warmup
+- gradient clipping
+- early stopping
+- saving best model checkpoint"
 
 ---
 
-=== Prompt 4.4: Hyperparameter Tuning ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"What hyperparameters should I tune for BERT-based ranking model? Suggest 
-optimal values for learning rate, batch size, epochs, dropout, and warmup 
-ratio."
-
-Response Summary:
-[Learning rate: 2e-5, Batch size: 32, Epochs: 5, Dropout: 0.3, 
-Warmup ratio: 0.1]
+Prompt 13:
+"What hyperparameters should i tune? Need suggestions for learning rate, batch size, 
+epochs, dropout rate, warmup ratio etc for BERT ranking model."
 
 ---
 
-=== Prompt 4.5: Memory Optimization ===
-Date: [Date]
-Model: Claude
+Prompt 14:
+"Getting out of memory error on Kaggle during training. How can i optimize memory 
+usage without changing the model much?"
 
-Prompt:
-"My model training runs out of memory on Kaggle. How can I optimize memory 
-usage while training BERT models?"
-
-Response Summary:
-[Use gradient accumulation, reduce batch size, use DistilBERT instead of BERT, 
-enable FP16 mixed precision training]
 
 ================================================================================
 SECTION 5: EVALUATION METRICS
 ================================================================================
 
-=== Prompt 5.1: NDCG Calculation ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Explain NDCG (Normalized Discounted Cumulative Gain) and how to calculate 
-NDCG@K for information retrieval. Provide Python implementation."
-
-Response Summary:
-[NDCG measures ranking quality with position discount. Use 
-sklearn.metrics.ndcg_score() with truncation to K]
+Prompt 15:
+"Can you explain what NDCG is and how to calculate it? Need to implement NDCG@K 
+for information retrieval evaluation."
 
 ---
 
-=== Prompt 5.2: MAP Implementation ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"How do I calculate Mean Average Precision (MAP) for product search? Provide 
-step-by-step algorithm and Python code."
-
-Response Summary:
-[For each query: calculate average of precision@k for each relevant item 
-retrieved, then average across all queries]
+Prompt 16:
+"How do i calculate Mean Average Precision (MAP) for product search? Need the 
+algorithm and python implementation."
 
 ---
 
-=== Prompt 5.3: Precision@K and Recall@K ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Implement Precision@K, Recall@K, and F1@K metrics for ranking evaluation. 
-What's the difference between these metrics?"
-
-Response Summary:
-[Precision@K: relevant in top K / K, Recall@K: relevant in top K / total 
-relevant, F1@K: harmonic mean of both]
+Prompt 17:
+"What's the difference between Precision@K and Recall@K? Also need F1@K 
+implementation for ranking evaluation."
 
 ---
 
-=== Prompt 5.4: Evaluation Pipeline ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Create a complete evaluation pipeline that groups results by query_id, sorts 
-by predicted score, and calculates all metrics (NDCG@5/10/20, MAP, P/R/F1@K) 
-across all test queries."
-
-Response Summary:
-[Implemented evaluate_ranking() function with per-query metric calculation and 
-averaging]
+Prompt 18:
+"Help me create an evaluation function that groups results by query_id, sorts by 
+predicted scores, and calculates all metrics - NDCG@5/10/20, MAP, Precision, 
+Recall, F1 at different K values."
 
 ================================================================================
-SECTION 6: WEB APPLICATION DEVELOPMENT
+SECTION 6: WEB APPLICATION
 ================================================================================
 
-=== Prompt 6.1: Streamlit Basics ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"How do I create a web interface for product search using Streamlit? I need a 
-text input box, search button, and display of ranked results with scores."
-
-Response Summary:
-[Use st.text_input(), st.button(), and st.markdown() for result display. Use 
-@st.cache_resource for model loading]
+Prompt 19:
+"How to create a web interface using Streamlit? Need a text input for search query, 
+a button, and displaying ranked results with their scores."
 
 ---
 
-=== Prompt 6.2: Real-time Search Pipeline ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Design the search pipeline for real-time inference:
-1. User enters query
+Prompt 20:
+"Need help designing the search pipeline:
+1. User types query
 2. Encode query to embedding
-3. Retrieve top-K candidates using cosine similarity
-4. Re-rank candidates using trained model
-5. Display top-N results with scores"
-
-Response Summary:
-[Implemented two-stage retrieval: fast candidate retrieval with embeddings, 
-then accurate re-ranking with trained model]
+3. Get top-K candidates using cosine similarity  
+4. Re-rank with the trained model
+5. Show top-N results
+How should i implement this efficiently?"
 
 ---
 
-=== Prompt 6.3: UI/UX Design ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Suggest good UI/UX practices for a product search interface. How should I 
-display results (cards, table, list)? What information should be shown?"
-
-Response Summary:
-[Use card-based layout with product title, description snippet, relevance 
-score, and product ID. Show search metrics (time, # results)]
+Prompt 21:
+"What are good UI practices for product search interface? Should i use cards, table, 
+or list view? What info to show for each result?"
 
 ---
 
-=== Prompt 6.4: Performance Optimization ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"My Streamlit app is slow when loading models. How can I optimize loading time 
-and inference speed for 8GB RAM system?"
-
-Response Summary:
-[Use @st.cache_resource for model loading, pre-compute product embeddings, 
-use CPU inference with batch processing, load model in eval mode]
+Prompt 22:
+"My streamlit app is very slow when loading the models. How can i optimize this? 
+Running on 8GB RAM laptop."
 
 ================================================================================
-SECTION 7: VISUALIZATION AND REPORTING
+SECTION 7: VISUALIZATIONS
 ================================================================================
 
-=== Prompt 7.1: Training Curves ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Create matplotlib visualizations for:
-1. Training vs validation loss curves
-2. Learning rate schedule
-3. NDCG progression during training
-Make plots publication-quality for LaTeX report."
-
-Response Summary:
-[Implemented comprehensive visualization with subplots, proper labels, legends, 
-and DPI settings for high-quality output]
+Prompt 23:
+"Need to create plots for:
+- Training vs validation loss 
+- Learning rate schedule over epochs
+- NDCG progression during training
+Make them look good for my report. Using matplotlib."
 
 ---
 
-=== Prompt 7.2: Results Table ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Format evaluation metrics into a nice table showing NDCG, Precision, Recall, 
-F1 at K=5,10,20 and MAP. Make it suitable for LaTeX report."
-
-Response Summary:
-[Created formatted table with proper alignment and precision formatting]
+Prompt 24:
+"How to format evaluation metrics into a nice table? Want to show NDCG, Precision, 
+Recall, F1 at K=5,10,20 and MAP in LaTeX format for report."
 
 ---
 
-=== Prompt 7.3: LaTeX Report Structure ===
-Date: [Date]
-Model: GPT-4
+Prompt 25:
+"What should be the structure for technical report in Springer LNCS format? Need 
+sections for intro, methodology, experiments, results etc."
 
-Prompt:
-"Outline the structure for LaTeX technical report in Springer LNCS format 
-covering: introduction, methodology, experiments, results, conclusion. Include 
-section-wise content guidelines."
-
-Response Summary:
-[Detailed report structure with 10 main sections: Abstract, Introduction, 
-Related Work, Methodology, Experiments, Results, Web Application, Challenges, 
-Conclusion, References]
 
 ================================================================================
-SECTION 8: DEBUGGING AND TROUBLESHOOTING
+SECTION 8: DEBUGGING ISSUES
 ================================================================================
 
-=== Prompt 8.1: CUDA Out of Memory ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"I'm getting 'CUDA out of memory' error during training. How can I fix this 
-without reducing model size?"
-
-Response Summary:
-[Reduce batch size, use gradient accumulation, clear cache with 
-torch.cuda.empty_cache(), use FP16 training]
+Prompt 26:
+"Getting CUDA out of memory error during training. How to fix without reducing 
+model size?"
 
 ---
 
-=== Prompt 8.2: Model Not Converging ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"My ranking model validation loss is not improving after first epoch. What 
-could be wrong with my training setup?"
-
-Response Summary:
-[Check: learning rate (might be too high/low), loss function (MSE appropriate 
-for regression), data imbalance, gradient flow, warmup schedule]
+Prompt 27:
+"My model's validation loss isnt improving after 1st epoch. What could be wrong? 
+Using MSE loss and AdamW optimizer."
 
 ---
 
-=== Prompt 8.3: Streamlit Caching Issues ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Streamlit is reloading models on every interaction. How do I properly cache 
-models and embeddings?"
-
-Response Summary:
-[Use @st.cache_resource (not @st.cache_data) for models. Ensure function is 
-pure and doesn't depend on external state]
+Prompt 28:
+"Streamlit keeps reloading models on every interaction even though i used 
+@st.cache_resource. Why is this happening?"
 
 ---
 
-=== Prompt 8.4: NLTK Data Missing ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Getting 'LookupError: Resource stopwords not found' when running preprocessor. 
-How to fix?"
-
-Response Summary:
-[Download NLTK data: nltk.download('stopwords'), nltk.download('wordnet'), 
-nltk.download('punkt')]
+Prompt 29:
+"Getting error 'LookupError: Resource stopwords not found' when running the 
+preprocessor. How do i download nltk data?"
 
 ================================================================================
-SECTION 9: DEPLOYMENT AND TESTING
+SECTION 9: DEPLOYMENT 
 ================================================================================
 
-=== Prompt 9.1: Local Testing ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Create a test script to verify all components work before deployment:
-1. Data loading
-2. Model loading
-3. Inference
-4. Metrics calculation"
-
-Response Summary:
-[Implemented setup_local.py with comprehensive checks for dependencies, files, 
-and module imports]
+Prompt 30:
+"Need to create a test script that verifies everything works:
+- data loading
+- model loading  
+- inference
+- metric calculations
+before final deployment."
 
 ---
 
-=== Prompt 9.2: Error Handling ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Add proper error handling to web app for:
-- Missing model files
-- Invalid queries
-- Model inference failures
-- Memory issues"
-
-Response Summary:
-[Use try-except blocks, check file existence before loading, show user-friendly 
-error messages with st.error()]
+Prompt 31:
+"How to add error handling to the web app for cases like missing model files, 
+invalid queries, inference failures, memory issues etc?"
 
 ---
 
-=== Prompt 9.3: Documentation ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Write comprehensive docstrings for all Python functions following Google style 
-guide. Include Args, Returns, Raises sections."
-
-Response Summary:
-[Added detailed docstrings with type hints and examples]
+Prompt 32:
+"Can you help write good docstrings for all functions? Should follow Google style 
+with Args, Returns, Raises sections."
 
 ================================================================================
-SECTION 10: CODE OPTIMIZATION AND BEST PRACTICES
+SECTION 10: CODE ORGANIZATION
 ================================================================================
 
-=== Prompt 10.1: Code Structure ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Suggest best practices for organizing code in machine learning projects. 
-How should I structure my directories and modules?"
-
-Response Summary:
-[Separate data loading, preprocessing, modeling, evaluation, and application. 
-Use src/ for modules, models/ for weights, data/ for datasets]
+Prompt 33:
+"What's the best way to organize code in ML projects? How should i structure 
+directories and separate modules?"
 
 ---
 
-=== Prompt 10.2: Type Hints ===
-Date: [Date]
-Model: Claude
-
-Prompt:
-"Add Python type hints to all function signatures. How do I hint NumPy arrays, 
-PyTorch tensors, and DataFrames?"
-
-Response Summary:
-[Use np.ndarray, torch.Tensor, pd.DataFrame from typing with proper imports]
+Prompt 34:
+"How to add type hints to python functions? Specifically for numpy arrays, 
+pytorch tensors, and pandas dataframes."
 
 ---
 
-=== Prompt 10.3: Logging ===
-Date: [Date]
-Model: GPT-4
-
-Prompt:
-"Add logging to track model training progress, data loading, and inference 
-time. Use Python logging module properly."
-
-Response Summary:
-[Use logging.getLogger(__name__) with proper handlers and formatters]
+Prompt 35:
+"Want to add logging to track training progress, data loading times, inference 
+speed. How to use python logging module properly?"
 
 ================================================================================
-END OF PROMPTS LOG
+END OF PROMPTS
 ================================================================================
 
-NOTES:
-------
-- Total prompts used: ~35
-- Primary models: Claude Sonnet 4.5, GPT-4
-- All responses were adapted and implemented with proper understanding
-- Code was tested and debugged iteratively
-
-This log demonstrates the iterative development process and proper use of AI 
-assistance while maintaining understanding of core concepts.
+Total prompts used: 35
+These prompts were used iteratively throughout the project development.
+All code was tested and debugged after implementation.
